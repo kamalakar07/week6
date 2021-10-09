@@ -40,7 +40,7 @@ pipeline {
           }
           stage("Code coverage") {
               when {
-                branch 'origin/main'
+                expression { BRANCH_NAME == "origin/main"}
               }
                steps {
                     sh "./gradlew jacocoTestReport"

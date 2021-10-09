@@ -1,4 +1,3 @@
-def BUILD_TIMESTAMP = 
 pipeline {
      agent any
 

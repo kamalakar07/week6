@@ -8,7 +8,6 @@ podTemplate(containers: [
 ]) {
 node(POD_LABEL) {
      stage('Run pipeline against a gradle project') {
-          git 'https://github.com/kamalakar07/week6.git', branch: 'main'
                container('gradle') {
 
                     stage("Compile") {

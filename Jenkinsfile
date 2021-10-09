@@ -17,7 +17,7 @@ pipeline {
              steps{
                 sh '''
                 echo env.GIT_BRANCH
-                chmod +x gradle
+                chmod +x gradlew
                 '''
              }
          }        

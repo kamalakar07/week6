@@ -40,7 +40,7 @@ pipeline {
           }
           stage("Code coverage") {
               when {
-                expression { GIT_BRANCH == "origin/main"}
+                expression { GIT_BRANCH.indexOf('main') > -1 }
               }
                steps {
                     sh "./gradlew jacocoTestReport"

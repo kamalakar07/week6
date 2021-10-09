@@ -1,6 +1,9 @@
+def BUILD_TIMESTAMP = 
 pipeline {
      agent any
-     
+     environment {
+        def BUILD_TIMESTAMP = sh(script: "echo `date +%s`", returnStdout: true).trim()
+     }
      stages {
           stage("Compile") {
                steps {
@@ -32,7 +35,6 @@ pipeline {
 
           stage("Docker build") {
                steps {
-                    sh "BUILD_TIMESTAMP=`date +"%Y-%m-%d %T"`"
                     sh "docker build -t leszko/calculator:${BUILD_TIMESTAMP} ."
                }
           }

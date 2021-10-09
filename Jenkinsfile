@@ -16,7 +16,7 @@ pipeline {
          stage ("setup"){
              steps{
                 sh '''
-                echo 'Branch... ' + $env.GIT_BRANCH 
+                echo 'Branch : ' + $GIT_BRANCH 
                 chmod +x gradle
                 '''
              }
@@ -40,7 +40,7 @@ pipeline {
           }
           stage("Code coverage") {
               when {
-                branch "*main"
+                branch 'main'
               }
                steps {
                     sh "./gradlew jacocoTestReport"

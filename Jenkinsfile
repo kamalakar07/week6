@@ -59,7 +59,6 @@ pipeline {
           stage("Docker build") {
               when {
                 branch "feature*"
-                { expression { "1" == "2" } }
               }
                steps {
                     sh "docker build -t leszko/calculator:${BUILD_TIMESTAMP} ."
@@ -69,7 +68,6 @@ pipeline {
           stage("Docker login") {
               when {
                 branch "feature*"
-                { expression { "1" == "2" } }
               }
                steps {
                     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
@@ -82,7 +80,6 @@ pipeline {
           stage("Docker push") {
               when {
                 branch "feature*"
-                { expression { "1" == "2" } }
               }
                steps {
                     sh "docker push leszko/calculator:${BUILD_TIMESTAMP}"

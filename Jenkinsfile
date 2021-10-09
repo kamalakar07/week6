@@ -1,9 +1,7 @@
 def BUILD_TIMESTAMP = 
 pipeline {
      agent any
-     environment {
-        def BUILD_TIMESTAMP = sh(script: "echo `date +%s`", returnStdout: true).trim()
-     }
+
      stages {
           stage("Compile") {
                steps {

@@ -1,12 +1,8 @@
-podTemplate(containers: [
-    containerTemplate(
-        name: 'gradle',
-        image: 'gradle:6.3-jdk14',
-        command: 'sleep',
-        args: '30d'
-    ),
-]) {
-node(POD_LABEL) {
+pipeline {
+     agent any
+     triggers {
+          pollSCM('* * * * *')
+     }
      stages {
           stage("Compile") {
                steps {

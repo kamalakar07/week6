@@ -14,7 +14,7 @@ pipeline {
 
      stages {
          stage ("testing"){
-             echo 'Branch... ' + env.GIT_BRANCH
+             sh "echo 'Branch... ' + env.GIT_BRANCH "
          }
          stage ("setup"){
              sh "chmod +x gradlew"

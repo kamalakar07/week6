@@ -32,6 +32,7 @@ pipeline {
 
           stage("Docker build") {
                steps {
+                    BUILD_TIMESTAMP=`date +"%Y-%m-%d %T"`
                     sh "docker build -t leszko/calculator:${BUILD_TIMESTAMP} ."
                }
           }

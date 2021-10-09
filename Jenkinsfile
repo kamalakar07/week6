@@ -13,6 +13,9 @@ pipeline {
     }
 
      stages {
+         stage ("testing"){
+             echo 'Branch... ' + env.GIT_BRANCH
+         }
           stage("Compile") {
               when {
                 branch "feature*"

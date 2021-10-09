@@ -23,7 +23,7 @@ pipeline {
          }        
           stage("Compile") {
               when {
-                branch "feature*"
+                expression { GIT_BRANCH.indexOf('playground') == -1 }
               }
                steps {
                     sh "chmod +x gradlew"
@@ -32,7 +32,7 @@ pipeline {
           }
           stage("Unit test") {
               when {
-                branch "feature*"
+                expression { GIT_BRANCH.indexOf('feature') > -1 }
               }
                steps {
                     sh "./gradlew test"
@@ -49,7 +49,7 @@ pipeline {
           }
           stage("Static code analysis") {
               when {
-                branch "feature*"
+                expression { GIT_BRANCH.indexOf('feature') > -1 }
               }
                steps {
                     sh "./gradlew checkstyleMain"
@@ -57,7 +57,7 @@ pipeline {
           }
           stage("Package") {
               when {
-                branch "feature*"
+                expression { GIT_BRANCH.indexOf('feature') > -1 }
               }
                steps {
                     sh "./gradlew build"
@@ -66,7 +66,7 @@ pipeline {
 
           stage("Docker build") {
               when {
-                branch "feature*"
+                expression { "skip" == "for now" }
               }
                steps {
                     sh "docker build -t leszko/calculator:${BUILD_TIMESTAMP} ."
@@ -75,7 +75,7 @@ pipeline {
 
           stage("Docker login") {
               when {
-                branch "feature*"
+                expression { "skip" == "for now" }
               }
                steps {
                     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
@@ -87,7 +87,7 @@ pipeline {
 
           stage("Docker push") {
               when {
-                branch "feature*"
+                expression { "skip" == "for now" }
               }
                steps {
                     sh "docker push leszko/calculator:${BUILD_TIMESTAMP}"
@@ -96,7 +96,7 @@ pipeline {
 
           stage("Update version") {
               when {
-                branch "feature*"
+                expression { "skip" == "for now" }
               }
                steps {
                     sh "sed  -i 's/{{VERSION}}/${BUILD_TIMESTAMP}/g' calculator.yaml"
@@ -105,7 +105,7 @@ pipeline {
           
           stage("Deploy to staging") {
               when {
-                branch "feature*"
+                expression { GIT_BRANCH.indexOf('feature') > -1 }
               }
                steps {
                     sh "kubectl config use-context staging"
@@ -116,7 +116,7 @@ pipeline {
 
           stage("Acceptance test") {
               when {
-                branch "feature*"
+                expression { GIT_BRANCH.indexOf('feature') > -1 }
               }
                steps {
                     sleep 60
@@ -126,7 +126,7 @@ pipeline {
 
           stage("Release") {
               when {
-                branch "feature*"
+                expression { GIT_BRANCH.indexOf('feature') > -1 }
               }
                steps {
                     sh "kubectl config use-context production"
@@ -136,7 +136,7 @@ pipeline {
           }
           stage("Smoke test") {
               when {
-                branch "feature*"
+                expression { GIT_BRANCH.indexOf('feature') > -1 }
               }
               steps {
                   sleep 60

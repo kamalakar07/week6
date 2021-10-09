@@ -13,11 +13,11 @@ pipeline {
     }
 
      stages {
-         stage ("testing"){
-             sh "echo 'Branch... ' + env.GIT_BRANCH "
-         }
          stage ("setup"){
-             sh "chmod +x gradlew"
+             steps{
+                sh "echo 'Branch... ' + env.GIT_BRANCH "
+                sh "chmod +x gradlew"
+             }
          }        
           stage("Compile") {
               when {

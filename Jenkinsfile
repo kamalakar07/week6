@@ -16,6 +16,9 @@ pipeline {
          stage ("testing"){
              echo 'Branch... ' + env.GIT_BRANCH
          }
+         stage ("setup"){
+             sh "chmod +x gradlew"
+         }        
           stage("Compile") {
               when {
                 branch "feature*"

@@ -16,7 +16,7 @@ pipeline {
          stage ("setup"){
              steps{
                 sh '''
-                echo Branch : $env.GIT_BRANCH
+                echo Branch : ${env.GIT_BRANCH}
                 chmod +x gradle
                 '''
              }

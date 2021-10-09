@@ -15,8 +15,10 @@ pipeline {
      stages {
          stage ("setup"){
              steps{
-                sh "echo 'Branch... ' + env.GIT_BRANCH "
-                sh "chmod +x gradlew"
+                sh '''
+                echo 'Branch... ' + $env.GIT_BRANCH 
+                chmod +x gradle
+                '''
              }
          }        
           stage("Compile") {

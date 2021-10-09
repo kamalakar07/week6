@@ -10,7 +10,6 @@ node(POD_LABEL) {
     stage('Run pipeline against a gradle project') {
      container('gradle') {
 
-     stages {
           stage("Compile") {
                steps {
                     sh "chmod +x gradlew"
@@ -94,7 +93,7 @@ node(POD_LABEL) {
                   sh "chmod +x smoke-test.sh && ./smoke-test.sh"
               }
           }
-     }
+
      }
     }
 }

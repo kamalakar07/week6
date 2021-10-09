@@ -1,11 +1,10 @@
 pipeline {
      agent any
-     triggers {
-          pollSCM('* * * * *')
-     }
+     
      stages {
           stage("Compile") {
                steps {
+                    chmod +x gradlew
                     sh "./gradlew compileJava"
                }
           }

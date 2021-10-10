@@ -116,7 +116,7 @@ pipeline {
 
           stage("Acceptance test") {
               when {
-                expression { GIT_BRANCH.indexOf('feature') > -1 }
+                expression { "skip" == "for now" }
               }
                steps {
                     sleep 60
@@ -136,7 +136,7 @@ pipeline {
           }
           stage("Smoke test") {
               when {
-                expression { GIT_BRANCH.indexOf('feature') > -1 }
+                expression { "skip" == "for now" }
               }
               steps {
                   sleep 60

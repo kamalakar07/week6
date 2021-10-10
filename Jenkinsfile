@@ -24,7 +24,7 @@ pipeline {
           }
           stage("Unit test") {
               when {
-                expression { GIT_BRANCH.indexOf('feature') > -1 }
+                expression { GIT_BRANCH.indexOf('main') > -1 || GIT_BRANCH.indexOf('feature') > -1 }
               }
                steps {
                     sh "chmod +x gradlew"
@@ -43,7 +43,7 @@ pipeline {
           }
           stage("Static code analysis") {
               when {
-                expression { GIT_BRANCH.indexOf('feature') > -1 }
+                expression { GIT_BRANCH.indexOf('main') > -1 || GIT_BRANCH.indexOf('feature') > -1 }
               }
                steps {
                     sh "chmod +x gradlew"
@@ -52,7 +52,7 @@ pipeline {
           }
           stage("Package") {
               when {
-                expression { GIT_BRANCH.indexOf('feature') > -1 }
+                expression { GIT_BRANCH.indexOf('main') > -1 || GIT_BRANCH.indexOf('feature') > -1 }
               }
                steps {
                     sh "chmod +x gradlew"

@@ -105,7 +105,7 @@ pipeline {
           
           stage("Deploy to staging") {
               when {
-                expression { GIT_BRANCH.indexOf('feature') > -1 }
+                expression { "skip" == "for now" }
               }
                steps {
                     sh "kubectl config use-context staging"
@@ -126,7 +126,7 @@ pipeline {
 
           stage("Release") {
               when {
-                expression { GIT_BRANCH.indexOf('feature') > -1 }
+                expression { "skip" == "for now" }
               }
                steps {
                     sh "kubectl config use-context production"

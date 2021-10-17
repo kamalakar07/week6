@@ -36,53 +36,60 @@ spec:
         path: config.json
 ''') {
   node(POD_LABEL) {
-    stage('Build a gradle project') {      
-      container('gradle') {
+    echo 'Branch that triggered the job is : ' + scm.branches[0].name
+    def myjobbranch = scm.branches[0].name;
+    container('gradle') {
+      echo "myjobbranch value is :" + myjobbranch
+      if(myjobbranch.indexOf('main' > -1){
         git url: 'https://github.com/kamalakar07/week6.git', branch: 'main'
-        stage("debug stage") {
-            sh """
-            echo ${env.BRANCH_NAME}
-            echo ${scm.branches[0].name }
-            """
-        }       
-        stage("Compile") {
-            if(env.BRANCH_NAME != 'playground') {
-                sh "chmod +x gradlew"
-                sh "./gradlew compileJava"
-            }
-        }  
-        stage("Unit test") {
-            if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'feature1' ) {
-                sh "chmod +x gradlew"
-                sh "./gradlew test"
-            }
-        }
-        stage("Code coverage") {
-            if(env.BRANCH_NAME == 'main') {
-                sh "chmod +x gradlew"
-                sh "./gradlew jacocoTestReport"
-                sh "./gradlew jacocoTestCoverageVerification"
-            }
-        } 
-        stage("Static code analysis") {
-            if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'feature1' ) {
-                sh "chmod +x gradlew"
-                sh "./gradlew checkstyleMain"
-            }
-        }  
-        stage("Static code analysis") {
-            if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'feature1' ) {
-                sh "chmod +x gradlew"
-                sh "./gradlew checkstyleMain"
-            }
-        }
-        stage('Package') {
-            sh '''
-            chmod +x gradlew
-            ./gradlew build
-            mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
-            '''
-            }
+      }else if(myjobbranch.indexOf('feature1' > -1){
+        git url: 'https://github.com/kamalakar07/week6.git', branch: 'feature1'
+      }else if(myjobbranch.indexOf('playground' > -1){
+        git url: 'https://github.com/kamalakar07/week6.git', branch: 'playground'
+      }
+      stage("debug stage") {
+          sh """
+          echo ${env.BRANCH_NAME}
+          echo ${scm.branches[0].name }
+          """
+      }       
+      stage("Compile") {
+          if(env.BRANCH_NAME != 'playground') {
+              sh "chmod +x gradlew"
+              sh "./gradlew compileJava"
+          }
+      }  
+      stage("Unit test") {
+          if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'feature1' ) {
+              sh "chmod +x gradlew"
+              sh "./gradlew test"
+          }
+      }
+      stage("Code coverage") {
+          if(env.BRANCH_NAME == 'main') {
+              sh "chmod +x gradlew"
+              sh "./gradlew jacocoTestReport"
+              sh "./gradlew jacocoTestCoverageVerification"
+          }
+      } 
+      stage("Static code analysis") {
+          if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'feature1' ) {
+              sh "chmod +x gradlew"
+              sh "./gradlew checkstyleMain"
+          }
+      }  
+      stage("Static code analysis") {
+          if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'feature1' ) {
+              sh "chmod +x gradlew"
+              sh "./gradlew checkstyleMain"
+          }
+      }
+      stage('Package') {
+          sh '''
+          chmod +x gradlew
+          ./gradlew build
+          mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
+          '''
       }
     }
     stage('Build Java Image') {

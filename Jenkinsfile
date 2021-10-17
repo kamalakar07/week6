@@ -51,12 +51,12 @@ spec:
             """
         } 
       }  
-      if(env.BRANCH_NAME != 'playground') {    
-        stage("Compile") {
-          sh "chmod +x gradlew"
-          sh "./gradlew compileJava"
-        }
+  
+      stage("Compile") {
+        sh "chmod +x gradlew"
+        sh "./gradlew compileJava"
       }
+      
       if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME.indexOf("feature") > -1 ) {
         stage("Unit test") {
             sh "chmod +x gradlew"

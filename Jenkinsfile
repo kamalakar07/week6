@@ -38,10 +38,11 @@ spec:
   node(POD_LABEL) {
     stage('Build a gradle project') {      
       container('gradle') {
-        git 'https://github.com/kamalakar07/week6.git'
+        git url: 'https://github.com/kamalakar07/week6.git', branch: 'main'
         stage("debug stage") {
             sh """
             echo ${env.BRANCH_NAME}
+            echo ${scm.branches[0].name }
             """
         }       
         stage("Compile") {

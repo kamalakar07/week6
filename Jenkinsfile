@@ -36,80 +36,80 @@ spec:
         path: config.json
 ''') {
   node(POD_LABEL) {
-    echo 'Branch that triggered the job is : ' + scm.branches[0].name
-
-    def myjobbranch = scm.branches[0].name
-    def scmbranch = '';
-    if(myjobbranch.indexOf('main') > -1){
-      scmbranch = 'main';
-    }else if(myjobbranch.indexOf('feature1') > -1){
-      scmbranch = 'feature1'
-    }else if(myjobbranch.indexOf('playground') > -1){
-      scmbranch = 'playground'
-    }
+    echo 'Branch that triggered the job (env.BRANCH_NAME) is : ' + env.BRANCH_NAME
     
     container('gradle') {
-      echo "myjobbranch value inside gradle is :" + myjobbranch
-      echo "scmbranch value inside gradle is :" + scmbranch
-
+      echo "env.BRANCH_NAME value inside gradle container is :" + env.BRANCH_NAME
       
-      git url: 'https://github.com/kamalakar07/week6.git', branch: scmbranch
+      git url: 'https://github.com/kamalakar07/week6.git', branch: env.BRANCH_NAME
 
-      stage("debug stage") {
-          sh """
-          echo ${env.BRANCH_NAME}
-          echo ${scm.branches[0].name }
-          """
-      }       
-      stage("Compile") {
-          if(env.BRANCH_NAME != 'playground') {
-              sh "chmod +x gradlew"
-              sh "./gradlew compileJava"
-          }
+      if( 1 == 2){
+        stage("debug stage") {
+            sh """
+            echo ${env.BRANCH_NAME}
+            echo ${scm.branches[0].name }
+            """
+        } 
       }  
-      stage("Unit test") {
-          if(scmbranch == 'main' || scmbranch == 'feature1' ) {
-              sh "chmod +x gradlew"
-              sh "./gradlew test"
-          }
+      if(env.BRANCH_NAME != 'playground') {    
+        stage("Compile") {
+          sh "chmod +x gradlew"
+          sh "./gradlew compileJava"
+        }
       }
-      stage("Code coverage") {
-          if(scmbranch == 'main') {
-              sh "chmod +x gradlew"
-              sh "./gradlew jacocoTestReport"
-              sh "./gradlew jacocoTestCoverageVerification"
-          }
+      if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME.indexOf("feature") > -1 ) {
+        stage("Unit test") {
+            sh "chmod +x gradlew"
+            sh "./gradlew test"
+        }
+      }
+      if(env.BRANCH_NAME == 'main') {
+        stage("Code coverage") {         
+          sh "chmod +x gradlew"
+          sh "./gradlew jacocoTestReport"
+          sh "./gradlew jacocoTestCoverageVerification"
+        }
       } 
-      stage("Static code analysis") {
-          if(scmbranch == 'main' || scmbranch == 'feature1' ) {
-              sh "chmod +x gradlew"
-              sh "./gradlew checkstyleMain"
-          }
+      if(env.BRANCH_NAME == 'main' || env.BRANCH_NAME.indexOf("feature") > -1 ) {
+        stage("Static code analysis") {         
+            sh "chmod +x gradlew"
+            sh "./gradlew checkstyleMain"
+        }
       }  
-      stage("Static code analysis") {
-          if(scmbranch == 'main' || scmbranch == 'feature1' ) {
-              sh "chmod +x gradlew"
-              sh "./gradlew checkstyleMain"
-          }
+      if(env.BRANCH_NAME  == 'main' || env.BRANCH_NAME.indexOf("feature") > -1 ) {
+        stage("Static code analysis") {
+          sh "chmod +x gradlew"
+          sh "./gradlew checkstyleMain"
+        }
       }
-      stage('Package') {
-          sh '''
-          chmod +x gradlew
-          ./gradlew build
-          mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
-          '''
+      if(env.BRANCH_NAME  == 'main' || env.BRANCH_NAME.indexOf("feature") > -1 ) { 
+        stage('Package') {
+            sh '''
+            chmod +x gradlew
+            ./gradlew build
+            mv ./build/libs/calculator-0.0.1-SNAPSHOT.jar /mnt
+            '''
+        }
       }
     }
 
     container('kaniko') {
-      stage('Build Image') {
-        sh '''
-        echo 'FROM openjdk:8-jre' > Dockerfile
-        echo 'COPY ./calculator-0.0.1-SNAPSHOT.jar app.jar' >> Dockerfile
-        echo 'ENTRYPOINT ["java", "-jar", "app.jar"]' >> Dockerfile
-        mv /mnt/calculator-0.0.1-SNAPSHOT.jar .
-        /kaniko/executor --context `pwd` --destination kamalakar07/hello-kaniko:1.0
-        '''
+      if(env.BRANCH_NAME != 'playground') { 
+        stage('Build Image') {
+          sh '''
+          echo 'FROM openjdk:8-jre' > Dockerfile
+          echo 'COPY ./calculator-0.0.1-SNAPSHOT.jar app.jar' >> Dockerfile
+          echo 'ENTRYPOINT ["java", "-jar", "app.jar"]' >> Dockerfile
+          mv /mnt/calculator-0.0.1-SNAPSHOT.jar .
+          '''
+          if(env.BRANCH_NAME  == 'main') { 
+            sh '/kaniko/executor --context `pwd` --destination kamalakar07/calculator:1.0'
+          }
+
+          if(env.BRANCH_NAME.indexOf("feature") > -1 ) { 
+            sh '/kaniko/executor --context `pwd` --destination kamalakar07/calculator-feature:0.1'
+          }
+        }
       }
     }
 

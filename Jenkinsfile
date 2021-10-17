@@ -40,11 +40,11 @@ spec:
     def myjobbranch = scm.branches[0].name;
     container('gradle') {
       echo "myjobbranch value is :" + myjobbranch
-      if(myjobbranch.indexOf('main' > -1){
+      if(myjobbranch.indexOf('main') > -1){
         git url: 'https://github.com/kamalakar07/week6.git', branch: 'main'
-      }else if(myjobbranch.indexOf('feature1' > -1){
+      }else if(myjobbranch.indexOf('feature1') > -1){
         git url: 'https://github.com/kamalakar07/week6.git', branch: 'feature1'
-      }else if(myjobbranch.indexOf('playground' > -1){
+      }else if(myjobbranch.indexOf('playground') > -1){
         git url: 'https://github.com/kamalakar07/week6.git', branch: 'playground'
       }
       stage("debug stage") {

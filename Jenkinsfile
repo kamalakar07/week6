@@ -75,13 +75,7 @@ spec:
             sh "chmod +x gradlew"
             sh "./gradlew checkstyleMain"
         }
-      }  
-      if(env.BRANCH_NAME  == 'main' || env.BRANCH_NAME.indexOf("feature") > -1 ) {
-        stage("Static code analysis") {
-          sh "chmod +x gradlew"
-          sh "./gradlew checkstyleMain"
-        }
-      }
+      } 
       if(env.BRANCH_NAME  == 'main' || env.BRANCH_NAME.indexOf("feature") > -1 ) { 
         stage('Package') {
             sh '''
